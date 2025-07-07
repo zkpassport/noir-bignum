@@ -10,6 +10,7 @@ pub global BN254_Fq_PARAMS: BigNumParams<3, 254> = BigNumParams {
         0x019ce5c263405370a08b6d0302b0bb2e,
         0x60c7,
     ],
+    
     redc_param: [0x65e1767cd4c086f3aed8a19bf90e51, 0x462623a04a7ab074a5868073013ae9, 0x054a47],
 };
 
