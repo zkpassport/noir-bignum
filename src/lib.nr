@@ -37,6 +37,7 @@ pub use fields::brainpoolP224t1Fq::BrainpoolP224t1_Fq;
 pub use fields::brainpoolP224t1Fr::BrainpoolP224t1_Fr;
 pub use fields::brainpoolP256r1Fq::BrainpoolP256r1_Fq;
 pub use fields::brainpoolP256r1Fr::BrainpoolP256r1_Fr;
+pub use fields::brainpoolP256t1Fq::BrainpoolP256t1_Fq;
 pub use fields::brainpoolP256t1Fr::BrainpoolP256t1_Fr;
 pub use fields::brainpoolP384r1Fq::BrainpoolP384r1_Fq;
 pub use fields::brainpoolP384r1Fr::BrainpoolP384r1_Fr;
