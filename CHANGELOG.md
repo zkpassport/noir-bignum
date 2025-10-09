@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.8.0](https://github.com/noir-lang/noir-bignum/compare/v0.7.5...v0.8.0) (2025-08-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* switch to new bit shifts semantic ([#196](https://github.com/noir-lang/noir-bignum/issues/196))
+
+### Bug Fixes
+
+* Switch to new bit shifts semantic ([#196](https://github.com/noir-lang/noir-bignum/issues/196)) ([d87eeb0](https://github.com/noir-lang/noir-bignum/commit/d87eeb062e03ea087e2f473367265fa58a66b5e9))
+
+## [0.7.5](https://github.com/noir-lang/noir-bignum/compare/v0.7.4...v0.7.5) (2025-07-24)
+
+
+### Bug Fixes
+
+* Let the bignum module be public ([#192](https://github.com/noir-lang/noir-bignum/issues/192)) ([a43f327](https://github.com/noir-lang/noir-bignum/commit/a43f327ab2a9838ae99d35494c7ed6e66a1eb542))
+
+## [0.7.4](https://github.com/noir-lang/noir-bignum/compare/v0.7.3...v0.7.4) (2025-07-11)
+
+
+### Features
+
+* Expose bignum trait derivation macro  ([#187](https://github.com/noir-lang/noir-bignum/issues/187)) ([103d6e2](https://github.com/noir-lang/noir-bignum/commit/103d6e2b360123f9bc2a378e0a5810d9fb41f9f1))
+* Remove conditional select from Bignum ([#185](https://github.com/noir-lang/noir-bignum/issues/185)) ([38c03e7](https://github.com/noir-lang/noir-bignum/commit/38c03e75b14a25c2321cd0a11186760fa403a106))
+
+
+### Bug Fixes
+
+* Correct from_field and derive_from_seed for small field modulus ([#190](https://github.com/noir-lang/noir-bignum/issues/190)) ([52b4cd0](https://github.com/noir-lang/noir-bignum/commit/52b4cd0d6a72d8de34aaad6577dc1164afeea428))
+
 ## [0.7.3](https://github.com/noir-lang/noir-bignum/compare/v0.7.2...v0.7.3) (2025-05-30)
 
 

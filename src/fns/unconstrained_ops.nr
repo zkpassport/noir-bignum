@@ -30,7 +30,7 @@ pub(crate) unconstrained fn __derive_from_seed<let N: u32, let MOD_BITS: u32, le
     params: P<N, MOD_BITS>,
     seed: [u8; SeedBytes],
 ) -> [u128; N] {
-    let out = derive_from_seed::<N, MOD_BITS, SeedBytes>(params, seed);
+    let out: [u128; N] = derive_from_seed::<N, MOD_BITS, SeedBytes>(params, seed);
     out
 }
 
@@ -45,6 +45,26 @@ pub(crate) unconstrained fn __is_zero<let N: u32>(limbs: [u128; N]) -> bool {
     }
 
     result
+}
+
+pub(crate) unconstrained fn __gte<let N: u32>(lhs: [u128; N], rhs: [u128; N]) -> bool {
+    let mut result = false;
+    let mut early_exit = false;
+    for i in 0..(N) {
+        let idx = (N) - 1 - i;
+        if (rhs[idx] == lhs[idx]) {
+            continue;
+        }
+
+        result = rhs[idx] < lhs[idx];
+        early_exit = true;
+        break;
+    }
+    if early_exit {
+        result
+    } else {
+        lhs[0] == rhs[0]
+    }
 }
 
 /**
@@ -105,7 +125,7 @@ pub(crate) unconstrained fn __mul_with_quotient<let N: u32, let MOD_BITS: u32>(
             mul[i + j] += (lhs[i] as Field * rhs[j] as Field);
         }
     }
-    let to_reduce: [u128; (N * 2)] = split_bits::__normalize_limbs(mul, 2 * N);
+    let to_reduce: [u128; (N * 2)] = split_bits::__normalize_limbs(mul);
     let (q, r) = __barrett_reduction(to_reduce, params.redc_param, MOD_BITS, params.modulus);
     (q, r)
 }
@@ -117,6 +137,34 @@ pub(crate) unconstrained fn __mul<let N: u32, let MOD_BITS: u32>(
 ) -> [u128; N] {
     let (_, b) = __mul_with_quotient::<_, MOD_BITS>(params, lhs, rhs);
     b
+}
+
+pub(crate) unconstrained fn __pow<let N: u32, let MOD_BITS: u32>(
+    params: P<N, MOD_BITS>,
+    val: [u128; N],
+    exponent: [u128; N],
+) -> [u128; N] {
+    let x = exponent;
+    let num_bits = MOD_BITS + 1;
+
+    let mut accumulator: [u128; N] = __one::<N>();
+
+    for i in 0..num_bits {
+        accumulator = __mul::<_, MOD_BITS>(params, accumulator, accumulator);
+        if __get_bit(x, num_bits - i - 1) {
+            accumulator = __mul::<_, MOD_BITS>(params, accumulator, val);
+        }
+    }
+    accumulator
+}
+
+pub(crate) unconstrained fn __invmod<let N: u32, let MOD_BITS: u32>(
+    params: P<N, MOD_BITS>,
+    val: [u128; N],
+) -> [u128; N] {
+    let one = __one();
+    let exp = __helper_sub(params.modulus, __helper_add(one, one));
+    __pow::<_, MOD_BITS>(params, val, exp)
 }
 
 pub(crate) unconstrained fn __div<let N: u32, let MOD_BITS: u32>(
@@ -176,34 +224,6 @@ pub(crate) unconstrained fn __udiv_mod<let N: u32>(
 
         (quotient, remainder)
     }
-}
-
-pub(crate) unconstrained fn __invmod<let N: u32, let MOD_BITS: u32>(
-    params: P<N, MOD_BITS>,
-    val: [u128; N],
-) -> [u128; N] {
-    let one = __one();
-    let exp = __helper_sub(params.modulus, __helper_add(one, one));
-    __pow::<_, MOD_BITS>(params, val, exp)
-}
-
-pub(crate) unconstrained fn __pow<let N: u32, let MOD_BITS: u32>(
-    params: P<N, MOD_BITS>,
-    val: [u128; N],
-    exponent: [u128; N],
-) -> [u128; N] {
-    let x = exponent;
-    let num_bits = MOD_BITS + 1;
-
-    let mut accumulator: [u128; N] = __one::<N>();
-
-    for i in 0..num_bits {
-        accumulator = __mul::<_, MOD_BITS>(params, accumulator, accumulator);
-        if __get_bit(x, num_bits - i - 1) {
-            accumulator = __mul::<_, MOD_BITS>(params, accumulator, val);
-        }
-    }
-    accumulator
 }
 
 pub(crate) unconstrained fn batch_invert<let N: u32, let MOD_BITS: u32, let M: u32>(
@@ -351,24 +371,4 @@ pub(crate) unconstrained fn __tonelli_shanks_sqrt<let N: u32, let MOD_BITS: u32>
         }
     }
     result
-}
-
-pub(crate) unconstrained fn __gte<let N: u32>(lhs: [u128; N], rhs: [u128; N]) -> bool {
-    let mut result = false;
-    let mut early_exit = false;
-    for i in 0..(N) {
-        let idx = (N) - 1 - i;
-        if (rhs[idx] == lhs[idx]) {
-            continue;
-        }
-
-        result = rhs[idx] < lhs[idx];
-        early_exit = true;
-        break;
-    }
-    if early_exit {
-        result
-    } else {
-        lhs[0] == rhs[0]
-    }
 }
