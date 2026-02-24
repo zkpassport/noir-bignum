@@ -6,7 +6,7 @@ pub global Secp192r1_Fr_PARAMS: BigNumParams<2, 192> = BigNumParams {
     has_multiplicative_inverse: true,
     modulus: [0xffffff99def836146bc9b1b4d22831, 0xffffffffffffffffff],
     double_modulus: [0x01ffffff33bdf06c28d7936369a45062, 0x01fffffffffffffffffe],
-    redc_param: [0x0662107c9eb94364e4b2dd7cf2, 0x10000000000000000000],
+    redc_param: [0x198841f27ae50d9392cb75f3ca, 0x40000000000000000000],
 };
 
 #[derive_bignum(2, 192, quote { Secp192r1_Fr_PARAMS })]

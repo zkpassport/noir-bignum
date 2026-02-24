@@ -19,15 +19,15 @@ pub global BrainpoolP512t1_Fr_PARAMS: BigNumParams<5, 512> = BigNumParams {
         0x0155bb3b70,
     ],
     redc_param: [
-        0xf0d9015d5c4ce2fafac64db57db370,
-        0xc61a235d449ff38f5f59ee47100ea,
-        0xcc44ef09666ad8f2f5bf92f7db947,
-        0x6daeb8a15d5ea2f03461e1e8373af6,
-        0x17f8d7f4ed,
+        0xc364057571338bebeb1936d5f6cdfe,
+        0x318688d75127fce3d7d67b91c403ab,
+        0x33113bc2599ab63cbd6fe4bdf6e51c,
+        0xb6bae285757a8bc0d18787a0dcebd8,
+        0x5fe35fd3b5,
     ],
 };
 
-#[derive_bignum(5, 512, quote {BrainpoolP512t1_Fr_PARAMS})]
+#[derive_bignum(5, 512, quote { BrainpoolP512t1_Fr_PARAMS })]
 pub struct BrainpoolP512t1_Fr {
     limbs: [u128; 5],
 }

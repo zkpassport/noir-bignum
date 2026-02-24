@@ -17,14 +17,14 @@ pub global BrainpoolP384r1_Fq_PARAMS: BigNumParams<4, 384> = BigNumParams {
         0x0119723c,
     ],
     redc_param: [
-        0x7bce07a71566f10a03bf684a267160,
-        0x449cae56ede9ed590cef1c4d721904,
-        0x16d8ec6b8ff25adfd3cc6fa65dda2c,
-        0x1d1b575b,
+        0xef381e9c559bc4280efda12899c598,
+        0x1272b95bb7a7b56433bc7135c86411,
+        0x5b63b1ae3fc96b7f4f31be997768b1,
+        0x746d5d6c,
     ],
 };
 
-#[derive_bignum(4, 384, quote {BrainpoolP384r1_Fq_PARAMS})]
+#[derive_bignum(4, 384, quote { BrainpoolP384r1_Fq_PARAMS })]
 pub struct BrainpoolP384r1_Fq {
     limbs: [u128; 4],
 }

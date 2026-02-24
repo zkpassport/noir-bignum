@@ -18,10 +18,10 @@ pub global Secp521r1_Fq_PARAMS: BigNumParams<5, 521> = BigNumParams {
         0x01fffffffffffffffffffffffffffffe,
         0x03fffffffffe,
     ],
-    redc_param: [0x10, 0x0, 0x0, 0x0, 0x200000000000],
+    redc_param: [0x40, 0x00, 0x00, 0x00, 0x800000000000],
 };
 
-#[derive_bignum(5, 521, quote {Secp521r1_Fq_PARAMS})]
+#[derive_bignum(5, 521, quote { Secp521r1_Fq_PARAMS })]
 pub struct Secp521r1_Fq {
     limbs: [u128; 5],
 }

@@ -10,10 +10,10 @@ pub global BrainpoolP256r1_Fq_PARAMS: BigNumParams<3, 256> = BigNumParams {
         0x01afb743dd53787ccc15213b071ae4db,
         0x0153f5,
     ],
-    redc_param: [0xf54a0ff6a2fa9b62ae6301180dd0c0, 0x131a1c55b7ebb73aba8322a7bf29b4, 0x1818c1],
+    redc_param: [0xd5283fda8bea6d8ab98c046037431a, 0x4c687156dfaedceaea0c8a9efca6d3, 0x606304],
 };
 
-#[derive_bignum(3, 256, quote {BrainpoolP256r1_Fq_PARAMS})]
+#[derive_bignum(3, 256, quote { BrainpoolP256r1_Fq_PARAMS })]
 pub struct BrainpoolP256r1_Fq {
     limbs: [u128; 3],
 }
