@@ -79,6 +79,7 @@ comptime fn make_test(_m: Module, N: u32, MOD_BITS: u32, params: Quoted) -> Quot
     let __one = quote { crate::fns::unconstrained_helpers::__one };
     let __shl = quote { crate::fns::unconstrained_helpers::__shl };
     let udiv = quote { crate::fns::constrained_ops::udiv };
+    let udiv_unsafe = quote { crate::fns::constrained_ops::udiv_unsafe };
     let sub = quote { crate::fns::constrained_ops::sub };
     quote {
 
@@ -130,7 +131,7 @@ fn test_add_modulus_limit() {
     let a: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: p, params };
 
     // Safety: test code
-    let two_pow_modulus_bits_minus_one: [u128; $N] =  unsafe { $__helper_sub($__shl(one, $MOD_BITS), one) };
+    let two_pow_modulus_bits_minus_one: [u128; $N] =  unsafe { $__helper_sub(&$__shl(&one, $MOD_BITS), &one) };
 
     let b: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: two_pow_modulus_bits_minus_one, params };
     let result = a + b;
@@ -146,10 +147,10 @@ fn test_add_modulus_overflow() {
     let one = unsafe{$__one()};
 
     // Safety: test code
-    let a: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(p, one) }, params };
+    let a: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(&p, &one) }, params };
 
     // Safety: test code
-    let two_pow_modulus_bits_minus_one: [u128; $N] =  unsafe { $__helper_sub($__shl(one, $MOD_BITS), one) };
+    let two_pow_modulus_bits_minus_one: [u128; $N] =  unsafe { $__helper_sub(&$__shl(&one, $MOD_BITS), &one) };
 
     let b: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: two_pow_modulus_bits_minus_one, params };
     let result = a + b;
@@ -221,7 +222,7 @@ fn assert_is_not_equal() {
     let a: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum::derive_from_seed(params, [1, 2, 3, 4]);
     let b: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum::derive_from_seed(params, [4, 5, 6, 7]);
 
-    a.assert_is_not_equal(b);
+    a.assert_is_not_equal(&b);
 }
 
 #[test(should_fail_with = "assert_is_not_equal fail")]
@@ -231,7 +232,7 @@ fn assert_is_not_equal_fail() {
     let a: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum::derive_from_seed(params, [1, 2, 3, 4]);
     let b: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum::derive_from_seed(params, [1, 2, 3, 4]);
 
-    a.assert_is_not_equal(b);
+    a.assert_is_not_equal(&b);
 }
 
 #[test(should_fail_with = "assert_is_not_equal fail")]
@@ -246,9 +247,9 @@ fn assert_is_not_equal_overloaded_lhs_fail() {
     let t0: [u128; $N] = a.limbs;
     let t1: [u128; $N] = modulus;
     // Safety: test code
-    let a_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(t0, t1) }, params };
+    let a_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(&t0, &t1) }, params };
 
-    a_plus_modulus.assert_is_not_equal(b);
+    a_plus_modulus.assert_is_not_equal(&b);
 }
 
 #[test(should_fail_with = "assert_is_not_equal fail")]
@@ -263,9 +264,9 @@ fn assert_is_not_equal_overloaded_rhs_fail() {
     let t0: [u128; $N] = b.limbs;
     let t1: [u128; $N] = modulus;
     // Safety: test code
-    let b_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(t0, t1) }, params };
+    let b_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(&t0, &t1) }, params };
 
-    a.assert_is_not_equal(b_plus_modulus);
+    a.assert_is_not_equal(&b_plus_modulus);
 }
 
 #[test(should_fail_with = "assert_is_not_equal fail")]
@@ -282,11 +283,11 @@ fn assert_is_not_equal_overloaded_fail() {
     let t2: [u128; $N] = modulus;
 
     // Safety: test code
-    let a_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(t0, t2) }, params };
+    let a_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(&t0, &t2) }, params };
     // Safety: test code
-    let b_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(t1, t2) }, params };
+    let b_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(&t1, &t2) }, params };
 
-    a_plus_modulus.assert_is_not_equal(b_plus_modulus);
+    a_plus_modulus.assert_is_not_equal(&b_plus_modulus);
 }
 
 #[test]
@@ -303,7 +304,7 @@ fn test_eq() {
     let t1: [u128; $N] = b.limbs;
 
     // Safety: test code
-    let b_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(t0, t1) }, params };
+    let b_plus_modulus: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum { limbs: unsafe { $__helper_add(&t0, &t1) }, params };
 
     assert_eq(a, b);
     assert_eq(a, b_plus_modulus);
@@ -319,9 +320,9 @@ fn test_is_zero() {
     let b: $RuntimeBigNum<$N, $MOD_BITS> = $RuntimeBigNum::derive_from_seed(params, [1, 2, 3, 4]);
 
     assert(a.is_zero() == true);
-    assert(a.is_zero_integer() == true);
+    assert(a.unsafe_is_zero_integer() == true);
     assert(b.is_zero() == false);
-    assert(b.is_zero_integer() == false);
+    assert(b.unsafe_is_zero_integer() == false);
 
     b.assert_is_not_zero();
 }
@@ -390,10 +391,11 @@ fn test_cmp_fuzz(seed: [u8; 2]){
     one[0] = 1;
     if modulus[0] % 2 == 0 {
         // if modulus is even, half_modulus is modulus / 2
-        half_modulus = $RuntimeBigNum {limbs: $udiv::<$N, $MOD_BITS>(modulus, two), params};
+        half_modulus = $RuntimeBigNum {limbs: $udiv_unsafe::<$N, $MOD_BITS>(&modulus, &two), params};
     } else {
         // if modulus is odd, half_modulus is (modulus - 1) / 2
-        half_modulus = $RuntimeBigNum {limbs: $udiv::<$N, $MOD_BITS>($sub(params,modulus, one), two), params};
+        let modulus_minus_one = $sub(&params, &modulus, &one);
+        half_modulus = $RuntimeBigNum {limbs: $udiv::<$N, $MOD_BITS>(&params, &modulus_minus_one, &two), params};
     }
 
 
@@ -456,25 +458,25 @@ fn test_quadratic_expression() {
 }
 }
 
-#[make_test(3, 254, quote {crate::fields::bn254Fq::BN254_Fq_PARAMS})]
+#[make_test(3, 254, quote { crate::fields::bn254Fq::BN254_Fq_PARAMS })]
 pub mod BNTests {}
 
-#[make_test(3, 256, quote {crate::fields::secp256k1Fq::Secp256k1_Fq_PARAMS})]
+#[make_test(3, 256, quote { crate::fields::secp256k1Fq::Secp256k1_Fq_PARAMS })]
 pub mod Secp256K1FqTests {}
 
-#[make_test(4, 381, quote {crate::fields::bls12_381Fq::BLS12_381_Fq_PARAMS})]
+#[make_test(4, 381, quote { crate::fields::bls12_381Fq::BLS12_381_Fq_PARAMS })]
 pub mod BLS12_381FqTests {}
 
-#[make_test(18, 2048, quote {super::TEST_2048_PARAMS})]
+#[make_test(18, 2048, quote { super::TEST_2048_PARAMS })]
 pub mod Test2048Tests {}
 
-#[make_test(3, 255, quote {crate::fields::bls12_381Fr::BLS12_381_Fr_PARAMS})]
+#[make_test(3, 255, quote { crate::fields::bls12_381Fr::BLS12_381_Fr_PARAMS })]
 pub mod BLS12_381_Fr_ParamsTests {}
 
-#[make_test(4, 377, quote {crate::fields::bls12_377Fq::BLS12_377_Fq_PARAMS})]
+#[make_test(4, 377, quote { crate::fields::bls12_377Fq::BLS12_377_Fq_PARAMS })]
 pub mod BLS12_377_Fq_ParamsTests {}
 
-#[make_test(3, 253, quote {crate::fields::bls12_377Fr::BLS12_377_Fr_PARAMS})]
+#[make_test(3, 253, quote { crate::fields::bls12_377Fr::BLS12_377_Fr_PARAMS })]
 pub mod BLS12_377_Fr_ParamsTests {}
 
 // 98760
@@ -493,7 +495,7 @@ unconstrained fn test_invmod<let N: u32, let MOD_BITS: u32>(params: BigNumParams
     let u: RuntimeBigNum<N, MOD_BITS> = RuntimeBigNum::derive_from_seed(params, [1, 2, 3, 4]);
     for _ in 0..1 {
         let v = u.__invmod();
-        let result = u.__mul(v);
+        let result = u.__mul(&v);
         let expected: RuntimeBigNum<N, MOD_BITS> = RuntimeBigNum::one(params);
         assert(result.limbs == expected.limbs);
     }
@@ -617,7 +619,7 @@ fn test_sqrt_BLS12_381_Fq() {
     assert((c == a) | (c == -a));
 
     // Safety: test code
-    let qnr_limbs: [u128; 4] = unsafe { __quadratic_non_residue(params) };
+    let qnr_limbs: [u128; 4] = unsafe { __quadratic_non_residue(&params) };
     let g = RuntimeBigNum { params: params, limbs: qnr_limbs };
     // Safety: test code
     let c = g.__sqrt();
@@ -678,6 +680,20 @@ fn test_barrett_reduction_fix() {
 
     // Safety: test code
     let (_quotient, remainder) =
-        unsafe { __barrett_reduction(to_reduce, params.redc_param, 1024, params.modulus) };
+        unsafe { __barrett_reduction(&to_reduce, &params.redc_param, 1024, &params.modulus) };
     assert((remainder[8] as Field).lt(params.modulus[8] as Field));
+}
+
+// BigNumParams::new must reject a modulus shorter than MOD_BITS (top bit not set).
+#[test(should_fail)]
+fn test_runtime_bignum_params_modulus_too_small() {
+    let modulus: [u128; 3] = [1, 0, 0];
+    let _: BigNumParams<3, 254> = BigNumParams::new(false, modulus, [0 as u128; 3]);
+}
+
+// BigNumParams::new must reject a modulus with limbs exceeding the expected bit width.
+#[test(should_fail)]
+fn test_runtime_bignum_params_modulus_too_large() {
+    let modulus: [u128; 3] = [1, 0, 0x10000];
+    let _: BigNumParams<3, 254> = BigNumParams::new(false, modulus, [0 as u128; 3]);
 }
