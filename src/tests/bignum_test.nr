@@ -16,9 +16,9 @@ use crate::fields::bls12_381Fr::BLS12_381_Fr;
 use crate::fields::bn254Fq::BN254_Fq;
 use crate::fields::brainpoolP192r1Fq::BrainpoolP192r1_Fq;
 use crate::fields::brainpoolP224r1Fq::BrainpoolP224r1_Fq;
+use crate::fields::ed25519Fq::ED25519_Fq;
 use crate::fields::secp192r1Fq::Secp192r1_Fq;
 use crate::fields::secp224r1Fq::Secp224r1_Fq;
-use crate::fields::ed25519Fq::ED25519_Fq;
 use crate::fields::U256::U256;
 global TEST_2048_PARAMS: BigNumParams<18, 2048> = BigNumParams {
     has_multiplicative_inverse: false,
